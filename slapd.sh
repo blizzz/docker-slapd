@@ -39,4 +39,25 @@ fi
 
 status "starting slapd"
 set -x
-exec /usr/sbin/slapd -h "ldap:///" -u openldap -g openldap -d 0
+echo "foo" > /var/lib/ldap/yolo
+/usr/sbin/slapd -h "ldapi:/// ldaps:///" -u openldap -g openldap -d 0 || true
+RESULT=$?
+echo "bar $RESULT" > /var/lib/ldap/yolo
+
+ldapmodify -Q -Y EXTERNAL -H ldapi:///<<EOF
+dn: cn=config
+add: olcTLSCertificateFile
+olcTLSCertificateFile: /etc/ldap/ssl/ldap.local.cert.pem
+-
+add: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: /etc/ldap/ssl/ldap.local.key.pem
+-
+add: olcTLSCACertificateFile
+olcTLSCACertificateFile: /etc/ldap/ssl/DeptCA.cacert.pem
+EOF
+
+killall slapd
+
+touch /var/lib/ldap/yolo3
+
+exit $RESULT
