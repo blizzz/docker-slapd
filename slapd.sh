@@ -39,12 +39,13 @@ fi
 
 status "starting slapd"
 set -x
-echo "foo" > /var/lib/ldap/yolo
-/usr/sbin/slapd -h "ldapi:/// ldaps:///" -u openldap -g openldap -d 0 || true
+/usr/sbin/slapd -h "ldapi:/// ldaps:///" -u openldap -g openldap -d 0 &
 RESULT=$?
-echo "bar $RESULT" > /var/lib/ldap/yolo
 
-ldapmodify -Q -Y EXTERNAL -H ldapi:///<<EOF
+if [ ! -e /var/lib/ldap/tls_configured ]; then
+    # we configure the certificate
+    sleep 2 # ldap might not be ready, yet
+    ldapmodify -Q -Y EXTERNAL -H ldapi:///<<EOF
 dn: cn=config
 add: olcTLSCertificateFile
 olcTLSCertificateFile: /etc/ldap/ssl/ldap.local.cert.pem
@@ -55,9 +56,11 @@ olcTLSCertificateKeyFile: /etc/ldap/ssl/ldap.local.key.pem
 add: olcTLSCACertificateFile
 olcTLSCACertificateFile: /etc/ldap/ssl/DeptCA.cacert.pem
 EOF
-
-killall slapd
-
-touch /var/lib/ldap/yolo3
+    # now restart slapd
+    killall slapd
+    sleep 2 # ensure ldap is stopped before restarting
+    touch /var/lib/ldap/tls_configured
+    /etc/service/slapd/run
+fi
 
 exit $RESULT
