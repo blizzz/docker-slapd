@@ -1,3 +1,26 @@
+Original read me below.
+
+## My modifications
+
+* a CA and sub-CA (name RootCA and DeptCA) are created
+* a certificate for ldap.local is created
+* slapd is configured to use the certificate
+* slapd runs on ldaps (port 636) solely
+
+### Build ###
+
+```
+sudo docker build -t blizzz-slapd .
+```
+
+### Run ###
+
+There is a convenience script for launching a docker instance with the name openldap as daemon:
+
+```
+sudo ./startldap.sh
+```
+
 ## slapd
 
 A basic configuration of the OpenLDAP server, slapd, with support for data
