@@ -6,6 +6,7 @@ Original read me below.
 * a certificate for ldap.local is created
 * slapd is configured to use the certificate
 * slapd runs on ldaps (port 636) solely
+* updated base image to run on Ubuntu 16.04 (Xenial)
 
 ### Build ###
 
