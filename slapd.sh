@@ -54,7 +54,7 @@ add: olcTLSCertificateKeyFile
 olcTLSCertificateKeyFile: /etc/ldap/ssl/ldap.local.key.pem
 -
 add: olcTLSCACertificateFile
-olcTLSCACertificateFile: /etc/ldap/ssl/DeptCA.cacert.pem
+olcTLSCACertificateFile: /etc/ldap/ssl/ca-certs.pem
 EOF
     # now restart slapd
     killall slapd

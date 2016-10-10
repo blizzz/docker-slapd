@@ -101,4 +101,5 @@ ln -s "$CA_PATH/DeptCA/certs/01.pem" "$CA_PATH/DeptCA/$(openssl x509 -hash -noou
 mkdir -p /etc/ldap/ssl
 cp "$CA_PATH/DeptCA/certs/01.pem" /etc/ldap/ssl/ldap.local.cert.pem
 cp "$CA_PATH/DeptCA/ldap.local.key.pem" /etc/ldap/ssl/ldap.local.key.pem
-cp "$CA_PATH/DeptCA/DeptCA.cacert.pem" /etc/ldap/ssl/DeptCA.cacert.pem
+cat "$CA_PATH/DeptCA/DeptCA.cacert.pem" > /etc/ldap/ssl/ca-certs.pem
+cat "$CA_PATH/RootCA/RootCA.cacert.pem" >> /etc/ldap/ssl/ca-certs.pem
